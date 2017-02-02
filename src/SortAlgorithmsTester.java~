@@ -1,0 +1,212 @@
+//Terry Speicher and Jason Ivey
+
+
+import java.util.*;
+import java.util.Arrays;
+import java.io.*;
+import java.math.BigInteger;
+
+
+public class SortAlgorithmsTester{
+  
+  private static Point[] data = new Point[100000];
+  
+  public static void main(String args[]){
+    
+    
+    int [] testCases = {1000};//{2,2,3,4,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100};
+      //200,300,400,500,600,700,800,900,1000,2000,3000,4000,5000,6000,7000,8000,9000,10000};
+    
+    int iterations = 2;
+    long [][] resultsTable = new long[7][testCases.length];
+    boolean testing = true;
+    
+    read(); //one time read of data[]
+    
+    SortAlgorithms sort = new SortAlgorithms();
+    
+    Point[] temp;  //define a temporary Point[] to sort and leave original data[]
+    
+    for (int counter = 1 ; counter <= iterations ; counter++){
+      System.out.println("Iteration#" + counter + " of " + iterations);
+      if (testing) System.out.print("Sort/#Items,");
+      for (int i = 0 ; i < testCases.length ; i++)
+        if (testing) System.out.print(testCases[i] + ",");
+      if (testing) System.out.println();
+      
+      if (testing) System.out.print("BubbleSort,");
+      for (int i = 0 ; i < testCases.length ; i++){
+        long startTime = System.nanoTime(); 
+        sort.bubbleSort(Arrays.copyOfRange(data,0,testCases[i]));
+        long estimatedTime = System.nanoTime() - startTime;
+        if (testing) System.out.print(estimatedTime + ",");
+        resultsTable[1][i] += estimatedTime;
+      }
+      if (testing) System.out.println();
+      
+      if (testing) System.out.print("TerryShakerSort,");
+      for (int i = 0 ; i < testCases.length ; i++){
+        temp = Arrays.copyOfRange(data,0,testCases[i]);
+        System.out.println("Sorted b4 TerryShaker? " + sort.isSorted(temp));
+        long startTime = System.nanoTime(); 
+        sort.TerryShaker(temp);
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Sorted after TerryShaker? " + sort.isSorted(temp));
+        if (testing) System.out.print(estimatedTime + ",");
+        resultsTable[2][i] +=estimatedTime;// / 10;
+      }
+      if (testing) System.out.println();    
+      
+      if (testing) System.out.print("MergeSort,");
+      for (int i = 0 ; i < testCases.length ; i++){
+        long startTime = System.nanoTime(); 
+        sort.mergeSort(Arrays.copyOfRange(data,0,testCases[i]));
+        long estimatedTime = System.nanoTime() - startTime;
+        if (testing) System.out.print(estimatedTime + ",");
+        resultsTable[3][i] +=estimatedTime;// / 10;
+      }
+      if (testing) System.out.println();
+      
+      if (testing) System.out.print("QuickSort,");
+      for (int i = 0 ; i < testCases.length ; i++){
+        long startTime = System.nanoTime(); 
+        sort.quickSort(Arrays.copyOfRange(data,0,testCases[i]));
+        long estimatedTime = System.nanoTime() - startTime;
+        if (testing) System.out.print(estimatedTime + ",");
+        resultsTable[4][i] +=estimatedTime;// / 10;
+      }
+      if (testing) System.out.println();
+      
+      if (testing) System.out.print("InsertionSort,");
+      for (int i = 0 ; i < testCases.length ; i++){
+        long startTime = System.nanoTime(); 
+        sort.insertionSort(Arrays.copyOfRange(data,0,testCases[i]));
+        long estimatedTime = System.nanoTime() - startTime;
+        if (testing) System.out.print(estimatedTime + ",");
+        resultsTable[5][i] +=estimatedTime;// / 10;
+      }
+      if (testing) System.out.println();
+      
+      if (testing) System.out.print("SelectionSort,");
+      for (int i = 0 ; i < testCases.length ; i++){
+        long startTime = System.nanoTime(); 
+        sort.selectionSort(Arrays.copyOfRange(data,0,testCases[i]));
+        long estimatedTime = System.nanoTime() - startTime;
+        if (testing) System.out.print(estimatedTime + ",");
+        resultsTable[6][i] +=estimatedTime;// / 10;
+      }
+      if (testing) System.out.println();
+      
+    }
+    
+    
+    if (testing) {
+      System.out.println("------------------------Totals over " + iterations + " iterations----------------------------");    System.out.print("Sort/#Items,");
+      for (int i = 0 ; i < testCases.length ; i++)
+        System.out.print(testCases[i] + ",");
+      System.out.println();
+      
+      for (int a = 1; a <=6 ; a++){
+        switch (a) {
+          case 1: 
+            System.out.print("Bubble,");
+            break;
+          case 2:
+            System.out.print("Shaker,");
+            break;
+          case 3:
+            System.out.print("Merge,");
+            break;
+          case 4:
+            System.out.print("Quick,");
+            break;
+          case 5: 
+            System.out.print("Insertion,");
+            break;
+          case 6:
+            System.out.print("Selection,");
+            break;
+        }  //end switch case
+        
+        for (int j = 0 ; j < resultsTable[0].length ; j++){
+          System.out.print(resultsTable[a][j] + ",");
+        }
+        System.out.println();
+        
+        
+      }
+    }
+    
+    System.out.println("------------------------Averages over " + iterations + " iterations----------------------------");
+    
+    System.out.print("Sort/#Items,");
+    for (int i = 0 ; i < testCases.length ; i++)
+      System.out.print(testCases[i] + ",");
+    System.out.println();
+    
+    for (int a = 1; a <=6 ; a++){
+      switch (a) {
+        case 1: 
+          System.out.print("Bubble,");
+          break;
+        case 2:
+          System.out.print("Shaker,");
+          break;
+        case 3:
+          System.out.print("Merge,");
+          break;
+        case 4:
+          System.out.print("Quick,");
+          break;
+        case 5: 
+          System.out.print("Insertion,");
+          break;
+        case 6:
+          System.out.print("Selection,");
+          break;
+      }  //end switch case
+      
+      for (int j = 0 ; j < resultsTable[0].length ; j++){
+        System.out.print(resultsTable[a][j]/ iterations+ ",");
+      }
+      System.out.println();
+      
+      
+    }
+    
+    
+        
+    
+    
+    
+    
+  }
+  
+  private static void read(){
+    
+    
+    try {
+      File file = new File("100000Points.txt");
+      Scanner scan = new Scanner(file);
+      
+      int x = 0;
+      String line;
+      String token[];
+      while(scan.hasNext()){
+        line = scan.nextLine();
+        token = line.split("\t");
+        data[x] = new Point(Double.parseDouble(token[0]), Double.parseDouble(token[1]));
+        x++;
+      }
+      
+      System.out.println("We have " + x + " points");
+      scan.close();
+    }
+    catch (Exception e){
+      System.out.println("Error in reading file");
+    }
+  }
+  
+  
+}
+

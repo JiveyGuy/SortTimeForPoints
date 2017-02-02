@@ -1,0 +1,342 @@
+public class SortAlgorithms{
+  
+  public SortAlgorithms(){
+    
+  }
+  
+  
+  public boolean isSorted(Point [] data){
+    
+    boolean sortedYN = true;
+    int i = 0;
+    while (i < data.length - 2 && sortedYN == true) {
+      if (data[i].getX() > data[i+1].getX())
+        sortedYN = false;
+      i++;
+      
+    }
+    return sortedYN;
+  }  //end isSortedYN
+  
+  public boolean looksEqual(Point [] data, Point [] test){
+    
+    boolean lookSame = true;
+    for (int i = 0 ; i < 100 ; i++)
+      if (data[i].getX() != test[i].getX())
+      lookSame = false;
+    return lookSame;
+  } //end looksEqual
+  
+//  ***********  Begin BubbleSort *****************
+  
+  public void bubbleSort(Point [] d){
+    for(int x = 0; x < d.length; x++){
+      for(int y = 0; y < d.length-1; y++){
+        if ( d[y].getX() > d[y+1].getX() ) {
+          Point temp = d[y];
+          d[y] = d[y+1];
+          d[y+1] = temp; 
+        }
+      }
+    }
+  }
+  
+//************* End Bubble Sort *******************
+  
+//  *************  Begin QuickSort Methods  ******************
+  
+  public void quickSort(Point [] data){
+    doQuickSort(data,0,data.length-1); 
+    /**
+     * sub method to start recursion process.  Required to 
+     * pass in the two indexes for processing the sub array.
+     * Initially, we pass in the absolute beginning and 
+     * absolute ending elements.
+     **/
+    
+  }  // end quickSort
+  
+  private void doQuickSort(Point[] array, int start, int end){
+    int pivotPoint;
+    if (start < end){
+      pivotPoint = partition(array, start, end);
+      doQuickSort(array,start,pivotPoint-1);
+      doQuickSort(array,pivotPoint+1,end);
+    }
+  } // end doQuickSort
+  
+  /**
+   * Partition the given array from array[start] to array[end] and put 
+   * pivot element in middle.  Then move all elements with values less
+   * than the pivot point to the left of the pivot point and move
+   * all elements with values greater than the pivot point to the right
+   * of the pivot point.
+   **/
+  private int partition(Point[] array, int start, int end){
+    
+    double pivotValue;
+    int endOfLeftList;
+    int mid;
+    
+    mid = (start + end) / 2;
+    
+    //take the first element of the array and swap 
+    //it with the middle element.  I don't know why, 
+    //except to keep with the idea of using the middle 
+    //element as the pivot
+    swap(array,start,mid);
+    
+    pivotValue = array[start].getX();
+    endOfLeftList = start;
+    for (int scan = start + 1; scan <= end; scan++){
+      if (array[scan].getX() < pivotValue){
+        endOfLeftList++;
+        if (endOfLeftList != scan)
+          swap(array,endOfLeftList,scan);
+      }
+    }//end of for
+    
+    swap(array,start,endOfLeftList);
+    
+    return endOfLeftList;
+    
+  }//end partition
+  
+  /**
+   * Swap elements of array[a] and array[b]
+   * @param array int[] with elements to be swapped
+   * @param a index of an element to be swapped
+   * @param b index of other element to be swapped
+   **/
+  private void swap(Point[] array, int a, int b){
+    
+    Point temp = array[a];
+    array[a] = array[b];
+    array[b] = temp;
+    
+  }//end swap
+  
+// **************  End QuickSort Methods   ***************** 
+  
+//  *************  Begin MergeSort Method  ******************  
+  
+  /***************************************************************************************
+    *    With online help from: 
+    *    Title: howotodoinjava.com
+    *    Author: Lokesh Gupta
+    *    Date: October 23, 2015
+    *    Availability: http://howtodoinjava.com/algorithm/merge-sort-java-example/
+    *
+    ***************************************************************************************/
+  
+  public void mergeSort(Point[] data){
+    
+    if (data.length <= 1){
+      return; 
+    }
+    
+    Point[ ] half1 = new Point[ data.length / 2 ];
+    Point[ ] half2 = new Point[ data.length - half1.length ];
+    
+    System.arraycopy(data, 0, half1, 0, half1.length);
+    System.arraycopy(data, half1.length, half2, 0, half2.length);
+    
+    mergeSort(half1);
+    mergeSort(half2);
+    
+    merge(half1, half2, data);
+    return;
+    
+    /**
+     * Main recursive method to merge sorting.
+     * divides Points array into smaller pieces.
+     * Makes use of merge(Point[],Point[],Point[]) to combine and sort data
+     **/
+  }
+  /**
+   * Merge elements of array[a] and array[b] into result
+   * @param half1 Point[] half to be combined with brother in order
+   * @param half2 Point[] brother of half1
+   * @param result Point[] to be returned when brothers combined and sorted. 
+   **/
+  private static void merge(Point[] half1, Point[] half2, Point[] result){
+    int x = 0;
+    int y = 0;
+    int merge = 0;
+    
+    while(x < half1.length && y < half2.length ){
+      if(half1[x].getX() < half2[y].getX()){
+        result[merge] = half1[x];
+        x++;
+      }
+      else{
+        result[merge] = half2[y];
+        y++;
+      }
+      merge++;
+    }
+    System.arraycopy(half1, x, result, merge, half1.length - x);
+    System.arraycopy(half2, y, result, merge, half2.length - y);
+  }
+  //  *************  End mergeSort Methods  ******************
+  
+  //  *************  Begin insertionSort Methods  ******************
+  
+  /***************************************************************************************
+    *    With online help from: 
+    *    Title: http://www.java2novice.com/
+    *    Author: N/A
+    *    Date: N/A
+    *    Availability: http://www.java2novice.com/java-interview-programs/insertion-sort/
+    ***************************************************************************************/
+  
+  
+  /**
+   * Sort Point[] by inserting unsorted points into the correct positions in sorted Point[]
+   * @param array Point[] array to be sorted
+   **/
+  
+  public static void insertionSort(Point array[]) {
+    int n = array.length; // Limiter initalized to length of Point[] array
+    for (int j = 1; j < n; j++) {
+      Point key = array[j]; // Key to comparison
+      int i = j-1; // Interloop counter, one less than 'j'
+      while ( (i > -1) && ( array[i].getX() > key.getX() ) ) {
+        array [i+1] = array [i];
+        i--;
+      }
+      array[i+1] = key; // Inserting key into sorted portion of array. 
+    }
+  }
+  
+  //  *************  End insertionSort Methods  ******************
+  
+  
+  //  *************  Begin selectionSort Methods  ****************** 
+  
+  /***************************************************************************************
+    *    With online help from: 
+    *    Title: Sorting.java
+    *    Author: Lewis/Loftus
+    *    Date: N/A
+    *    Availability: http://www.ics.uci.edu/~stasio/winter06/Lectures/Lec7code/ComparableExample/Sorting.java
+    ***************************************************************************************/
+  
+  /**
+   * Sorts the Point array of objects using the selection sort algorithm.
+   * @param Arr Point[] array to be sorted
+   **/
+  
+  public static void selectionSort (Point[] input)
+  {
+    int min; // Min value
+    Point temp; // Temp storage of Points
+    
+    for (int index = 0; index < input.length-1; index++)
+    {
+      min = index; // Initializing min
+      for (int scan = index+1; scan < input.length; scan++)
+        if (input[scan].getX() < input[min].getX())
+        min = scan; // update min
+      
+      // Swap the values
+      temp = input[min];
+      input[min] = input[index];
+      input[index] = temp;
+    }
+  }
+  
+  
+//  **************   Cocktail Shaker Sort   *********************
+//http://www.javacodex.com/Sorting/Cocktail-Sort
+  
+  public static void cocktailShakerSort( Point[] array ){
+    boolean swapped;
+    do {
+      swapped = false;
+      for (int i =0; i<=  array.length  - 2;i++) {
+        if (array[ i ].getX() > array[ i + 1 ].getX()) {
+          //test whether the two elements are in the wrong order
+          Point temp = array[i];
+          array[i] = array[i+1];
+          array[i+1]=temp;
+          swapped = true;
+        }
+      }
+      if (!swapped) {
+        //we can exit the outer loop here if no swaps occurred.
+        break;
+      }
+      swapped = false;
+      for (int i= array.length - 2;i>=0;i--) {
+        if (array[ i ].getX() > array[ i + 1 ].getX()) {
+          Point temp = array[i];
+          array[i] = array[i+1];
+          array[i+1]=temp;
+          swapped = true;
+        }
+      }
+      //if no elements have been swapped, then the list is sorted
+    } while (swapped);
+  }
+  
+  public void TerryShaker(Point [] p){
+    doTerryShaker(p,0,p.length-1);
+  }
+  
+  public void doTerryShaker(Point [] p, int start, int end){
+    
+    Point temp;
+    
+    if (start != end) { //only 1 element.  We are done.
+      if ( (end - start) == 1) {
+        //only two elements left
+        //compare and swap if necessary
+        if (p[start].getX() > p[end].getX()){
+          temp = p[start];
+          p[start] = p[end];
+          p[end] = temp;
+        }
+      } else {
+        //more than 2 elements - go through and find max and min and swap
+        double maxValue;
+        double minValue;
+        int minValueIndex;
+        int maxValueIndex;
+        
+        minValue = maxValue = p[start].getX();  //set min and max to first element
+        minValueIndex = maxValueIndex = start;
+        
+        for (int i = start + 1 ; i <= end ; i++){  //go through array to find max and mins
+          if (p[i].getX() < minValue) {
+            minValue = p[i].getX();
+            minValueIndex = i;
+          } //else (?? can we skip this next if if the value is < is true from above???
+          if (p[i].getX() > maxValue) { 
+            maxValue = p[i].getX();
+            maxValueIndex = i;
+          }
+        }  //after this for statement, we know the locations of the max and min elements
+        
+        temp = p[start];                //swap min and start
+        p[start] = p[minValueIndex];
+        p[minValueIndex] = temp;
+        
+        temp = p[end];
+        p[end] = p[maxValueIndex];      //swap max and start
+        p[maxValueIndex] = temp;
+        
+        //at this point, start contains the smallest element and end contains the largest
+        //so call routine again (recursive) with start + 1 and end - 1
+        
+        doTerryShaker(p,start+1,end-1);
+        
+      }
+    }
+  } //end doTerryShaker
+  
+  
+  
+  
+}
+
